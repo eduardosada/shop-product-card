@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+
+    <title>shop-product-card demo</title>
+
+    <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+
+    <link rel="import" href="../../iron-demo-helpers/demo-pages-shared-styles.html">
+    <link rel="import" href="../../iron-demo-helpers/demo-snippet.html">
+    <link rel="import" href="../../iron-icons/iron-icons.html">
+    <link rel="import" href="../../iron-icons/social-icons.html">
+    <link rel="import" href="../shop-product-card.html">
+
+    <custom-style>
+      <style is="custom-style" include="demo-pages-shared-styles">
+      .grid {
+        display: flex;
+        align-items: stretch;
+        flex-wrap: wrap;
+        justify-content: flex-start;
+      }
+
+      .grid-item {
+        width: 33.333%;
+      }
+
+      shop-product-card {
+        margin: 4px;
+        --shop-product-card-badge-icon:{
+          background-color:transparent;
+          color: #FF5722;
+          width: 38px;
+          height: 38px;
+          padding: 6px;
+        };
+      }
+
+      demo-snippet {
+        --demo-snippet-demo: {
+          background-color: #cfd8dc;
+        }
+      }
+      </style>
+    </custom-style>
+  </head>
+  <body>
+
+    <div class="vertical-section-container centered">
+      <h3>Basic shop-product-card item</h3>
+      <demo-snippet>
+        <template>
+          <div class="grid">
+            <div class="grid-item">
+              <shop-product-card
+                price="99.99"
+                price-discount="10"
+                price-highlighted
+                price-label="Offer!"
+                name="Light Blue MI Band"
+                image="images/light-blue-mi-band.jpg"
+              ></shop-product-card>
+            </div>
+          </div>
+        </template>
+      </demo-snippet>
+    </div>
+
+
+    <div class="vertical-section-container centered">
+      <h3>Combined shop-product-card showcase</h3>
+      <demo-snippet>
+        <template>
+          <div class="grid">
+            <div class="grid-item">
+              <shop-product-card
+                price="99.99"
+                price-discount="10"
+                name="Light Blue MI Band"
+                image="images/light-blue-mi-band.jpg"
+                order-quantity="3"
+                badge-icon="icons:thumb-up"
+              ></shop-product-card>
+            </div>
+            <div class="grid-item">
+              <shop-product-card
+                price-highlighted
+                price="421"
+                name="Orange Portable Speaker"
+                image="images/orange-portable-speaker.jpg"
+                price-currency="EUR"
+              ></shop-product-card>
+            </div>
+            <div class="grid-item">
+              <shop-product-card
+                price="123.25"
+                price-currency="USD"
+                name="Plug In Speaker"
+                image="images/plug-in-speaker.jpg"
+              ></shop-product-card>
+            </div>
+          </div>
+        </template>
+      </demo-snippet>
+    </div>
+
+  </body>
+</html>

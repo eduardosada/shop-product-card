@@ -1,0 +1,327 @@
+<link rel="import" href="../polymer/polymer-element.html">
+<link rel="import" href="../polymer/lib/elements/dom-if.html">
+<link rel="import" href="../iron-icon/iron-icon.html">
+
+<dom-module id="shop-product-card" strip-whitespaces>
+  <template>
+    <style>
+      :host(:not([hidden])) {
+        display: block;
+        background: #ffffff;
+        text-align: center;
+        position: relative;
+        border-radius: 2px;
+        overflow: hidden;
+        box-shadow: 0 1px 4px 0 rgba(0,0,0,0.14);
+      }
+
+      .product-image {
+        width: var(--shop-product-card-image-size, 150px);
+        height: var(--shop-product-card-image-size, 150px);
+        margin-left: auto;
+        margin-right: auto;
+        background: #FFFFFF;
+        cursor: pointer;
+        position: relative;
+        padding: 10px;
+        margin-top: 5px;
+        margin-bottom: 5px;
+
+        @apply --shop-product-card-image-container;
+      }
+
+      #image,
+      #image[src=""] {
+        width: 0;
+        height: 0;
+        padding: 100% 100% 0 0;
+        overflow: hidden;
+        opacity: 0.2;
+        background-image: var(--shop-product-card-image-placeholder-url);
+        background-size: 80px;
+        background-repeat: no-repeat;
+        background-position: center center;
+
+        @apply --shop-product-card-image-placeholder;
+      }
+
+      #image[src]:not([src=""]) {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        position: relative;
+        border: 0;
+        padding: 0;
+        opacity: 1;
+        background: initial;
+
+        @apply --shop-product-card-image;
+      }
+
+      .product-price {
+        display: block;
+        color: var(--shop-product-card-price-color, #037ee8);
+        font-size: 16px;
+        line-height: 30px;
+        font-weight: bold;
+        text-align: center;
+        position: relative;
+        padding: 16px 0;
+
+        @apply --shop-product-card-price;
+      }
+
+      .product-highlighted:not([hidden]) {
+        background-color: #69ffca;
+        color: #171717;
+        display: block;
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        min-height: 20px;
+        line-height: 32px;
+        font-size: 12px;
+        font-weight: normal;
+        text-transform: uppercase;
+        padding: 0px 0 30px;
+      }
+
+      .product-highlighted:not([hidden]) + .product-price {
+        padding: 8px 0;
+        margin-top: 20px;
+        color: #171717;
+      }
+
+      .badge-icon {
+        display: none;
+        position: absolute;
+        right: 8px;
+        top: 8px;
+        z-index: 2;
+        border-radius: 50%;
+        width: 48px;
+        height: 48px;
+        padding: 12px;
+        box-sizing: border-box;
+        background-color: #2952ff;
+        color: #69ffca;
+        @apply --shop-product-card-badge-icon;
+      }
+
+      .badge-icon {
+        display: block;
+      }
+
+      .product-name {
+        text-align: center;
+        font-weight: normal;
+        font-size: 14px;
+        line-height: 1;
+        display: block;
+        margin: 4px 0;
+        text-transform: uppercase;
+        min-height: 44px;
+        width: 100%;
+        padding: 0 10px;
+        box-sizing: border-box;
+
+        @apply --shop-product-card-name;
+      }
+
+      .product-quantity {
+        font-size: 15px;
+        position: absolute;
+        left: 0px;
+        bottom: 16px;
+        padding: 0 8px;
+        color: var(--shop-product-card-quantity-color, #171717);;
+        background-color: var(--shop-product-card-quantity-bgcolor, #22ffb1);
+        line-height: 30px;
+        z-index: 2;
+
+        @apply --shop-product-card-quantity;
+      }
+
+      .product-discount {
+        width: 42px;
+        height: 42px;
+        border-radius: 50%;
+        background: #f53f32;
+        overflow: hidden;
+        position: absolute;
+        text-align: center;
+        font-size: 14px;
+        font-weight: 400;
+        line-height: 42px;
+        color: white;
+        bottom: 10px;
+        right: 10px;
+
+        @apply --shop-product-card-discount;
+      }
+
+      .order-notice {
+        z-index: 1;
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        right: 0;
+        left: 0;
+        font-size: 50px;
+        font-weight: normal;
+        background: rgba(255,255,255,0.8);
+        color: var(--shop-product-card-order-notice-color, #037ee8);
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+
+        @apply --shop-product-card-order-notice
+      }
+
+      .order-notice ~ #image {
+        opacity: 0.2;
+      }
+    </style>
+
+
+    <div id="main" class="product">
+      <template is="dom-if" if="[[badgeIcon]]">
+        <iron-icon class="badge-icon" icon="[[badgeIcon]]"></iron-icon>
+      </template>
+
+      <div class="product-image">
+        <template is="dom-if" if="[[orderNotice]]" restamp>
+          <span class="order-notice">
+            <span>Return</span>
+          </span>
+        </template>
+
+        <img id="image" on-click="_onEditItem" src$="[[image]]"/>
+
+        <template is="dom-if" if="[[priceDiscount]]">
+          <span class="product-discount">-[[priceDiscount]]%</span>
+        </template>
+      </div>
+
+      <template is="dom-if" if="[[orderQuantity]]" restamp>
+        <div class="product-quantity">x[[orderQuantity]]</div>
+      </template>
+
+      <span class="product-name" on-click="_onEditItem">
+        [[name]]
+        <slot name="name"></slot>
+      </span>
+
+      <span class="product-highlighted" hidden$="[[!priceHighlighted]]">
+        [[priceLabel]]
+      </span>
+
+      <span class="product-price">
+        [[priceCurrency]] [[price]]
+        <slot name="price"></slot>
+      </span>
+
+      <slot></slot>
+    </div>
+
+
+  </template>
+
+  <script>
+    /**
+     * `shop-product-card`
+     * A product item card
+     *
+     * @customElement
+     * @polymer
+     * @demo demo/index.html
+     */
+    class ShopProductCard extends Polymer.Element {
+      static get is() { return 'shop-product-card'; }
+      static get properties() {
+        return {
+          /**
+           * The name of the item
+           * @type {String}
+           */
+          name: {
+            type: String
+          },
+
+          /**
+           * An image of the item. This can be a URL or a fully data-image uri.
+           * @type {String}
+           */
+          image: {
+            type: String
+          },
+
+          /**
+           * The offer price of a product.
+           * Use the priceCurrency property (with ISO 4217 codes e.g. "USD")
+           * instead of including ambiguous symbols such as '$' in the value.
+           *
+           * Use '.' (Unicode 'FULL STOP' (U+002E)) rather than ',' to
+           * indicate a decimal point. Avoid using these symbols as a
+           * readability separator.
+           * @type {String}
+           */
+          price: {
+            type: Number,
+            value: 0
+          },
+
+          /**
+           * The currency (in 3-letter ISO 4217 format) of the price.
+           * @type {Object}
+           */
+          priceCurrency: {
+            type: String,
+            value: 'USD'
+          },
+
+          /**
+           * A price discount.
+           * @type {Number}
+           */
+          priceDiscount: {
+            type: Number,
+            value: 0
+          },
+
+          priceHighlighted: {
+            type: Boolean,
+            value: false
+          },
+
+          priceLabel: {
+            type: String
+          },
+
+          badgeIcon: {
+            type: String
+          },
+
+          /**
+           * The number of the item ordered. If the property is not
+           * set, assume the quantity is zero.
+           * @type {Number}
+           */
+          orderQuantity: {
+            type: Number,
+            value: 0
+          },
+
+          orderNotice: {
+            type: String
+          },
+
+        };
+      }
+    }
+
+    window.customElements.define(ShopProductCard.is, ShopProductCard);
+  </script>
+</dom-module>
